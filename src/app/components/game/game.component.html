@@ -35,7 +35,7 @@
   
 
     <ng-template #gameFinished>
-      <h1>WINNER!!! <br> </h1>
+      <h1 *ngIf="gameLog$ | async as gameLog"> {{gameLog?.gameWinner?.name}} is the WINNER!!! </h1>
       <h3 class="d-flex justify-content-start">
         Final Score:
         {{ players[0].name }} {{ players[0].score }} / {{ players[1].name }}
