@@ -8,10 +8,3 @@ export interface Game {
 }
 
 export type ResetState = 'DATA' |  'TEMPLATE_AND_DATA' | undefined; 
-
-/**
- * Probably the winners and scores should be part of the game so we can 
- * have a thing like a score board etc. Lets see how this pans out. 
- * 
- * Maybe we can have a round interface to represent the round of a game 
- */

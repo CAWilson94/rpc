@@ -7,7 +7,6 @@ import { ResetState } from '../models/game';
   providedIn: 'root',
 })
 export class GameService {
-  
   private playerInputSubject = new BehaviorSubject<string>('');
   private errorMessageSubject = new BehaviorSubject<string>('');
 
@@ -21,7 +20,6 @@ export class GameService {
 
   readonly MAX_PLAYERS = 2;
   private nextPlayerId = 0;
-
 
   private gameResetSubject = new BehaviorSubject<ResetState>(undefined);
   gameReset$ = this.gameResetSubject.asObservable();
@@ -49,20 +47,25 @@ export class GameService {
       console.warn(`Cannot add more than ${this.MAX_PLAYERS}`);
       return;
     }
-    const newPlayer: Player = { name: playerName, id: this.nextPlayerId++, score: 0}; // will end up skipping the 0th id I think
+    const newPlayer: Player = {
+      name: playerName,
+      id: this.nextPlayerId++,
+      score: 0,
+    }; // will end up skipping the 0th id I think
     const updatedPlayers = [...this.playersSubject.getValue(), newPlayer];
     this.playersSubject.next(updatedPlayers);
   }
 
-  resetRound(resetTemplating: boolean){
+  resetRound(resetTemplating: boolean) {
     this.players$ = this.players$.pipe(
-      map(players => players.map(({ move, ...rest }) => rest))
+      map((players) => players.map(({ move, ...rest }) => rest))
     );
-    this.gameResetSubject.next(resetTemplating ?'TEMPLATE_AND_DATA' : 'DATA');
+    this.gameResetSubject.next(resetTemplating ? 'TEMPLATE_AND_DATA' : 'DATA');
   }
 
-  finishGames(){ 
-    this.gameFinishSubject.next(true); 
+  finishGames() {
+    setTimeout(() => {
+      this.gameFinishSubject.next(true);
+    }, 2000);
   }
-
 }

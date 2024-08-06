@@ -47,11 +47,7 @@ export class GameComponent {
       if(player1.score >=this.WINNING_SCORE || player2.score >=this.WINNING_SCORE){ 
         this.gameService.finishGames();
       }
-      console.log( `Score is ${player1.name} : ${this.currentRoundPlayers[player1.id].score} /  ${player2.name} ${this.currentRoundPlayers[player2.id].score} `);
-    }else { 
-      console.log( `DRAW ${player1.name} : ${this.currentRoundPlayers[player1.id].score} / ${player2.name} ${this.currentRoundPlayers[player2.id].score} `);
     }
-
     this.resetRound(false);    
   }
 
