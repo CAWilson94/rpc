@@ -1,0 +1,8 @@
+<div class="d-flex flex-column h-100">
+  @if(players$ | async; as players){
+    <div class="d-flex flex-row pb-3 mt-5">
+        <move-selector [playerSelected]="players[0]"></move-selector>
+        <move-selector [playerSelected]="players[1]"></move-selector>
+      </div>
+    }
+</div>

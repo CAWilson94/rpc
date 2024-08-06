@@ -1,0 +1,16 @@
+<form class="d-flex align-items-center flex-grow-1 me-1" (ngSubmit)="onSubmit()">
+    <div class="form-group me-3">
+      <input
+        type="text"
+        class="form-control"
+        id="playerName"
+        [(ngModel)]="playerName"
+        name="playerName"
+        placeholder={{instructionsMessage}}
+        required
+      />
+    </div>
+    <button type="submit" class="btn btn-primary mt-auto">Save</button>
+  </form>
+
+

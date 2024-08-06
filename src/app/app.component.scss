@@ -1,0 +1,26 @@
+:host {
+    display: flex;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  main {
+    width: 100vw;
+    height: 100vh; 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    padding: 1rem;
+  }
+  
+  .content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .content-welcome { 
+    @extend .content;
+    max-width: 700px;
+  }

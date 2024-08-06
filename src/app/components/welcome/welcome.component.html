@@ -1,0 +1,37 @@
+<div class="d-flex flex-column w-100 p-1">
+  <div
+    class="d-flex flex-row justify-content-evenly align-items-center position-relative"
+  >
+    <ng-container *ngIf="gameState$ | async as gameState">
+      <player-input-form
+        [instructionsMessage]="
+          gameState.players.length > 0
+            ? 'Insert player two name'
+            : 'Insert player one name'
+        "
+      ></player-input-form>
+      <button
+        class="btn btn-secondary h-50"
+        (click)="onPlayerInput(gameState.players)"
+      >
+        Play Computer
+      </button>
+    </ng-container>
+  </div>
+  <div *ngIf="gameState$ | async as gameState">
+    <div
+      *ngIf="gameState.players.length < 1 && gameState.errorMessage"
+      class="message-container alert alert-danger mt-5 position-absolute align-self-start"
+    >
+      {{ gameState.errorMessage }}
+    </div>
+  </div>
+  <div class="message-container mt-5 position-absolute align-self-start">
+    @if (players$ | async; as players){ @if(players.length > 0){ @for(player of
+    players$ | async; track player){
+    <h2>Player {{ (player.id || 0) + 1 }} : {{ player.name }}</h2>
+    } @if(players.length > 1){ All players added, beginning game! }
+    @if(players.length < 2){ please add a player two or click to play against
+    computer. } } }
+  </div>
+</div>
