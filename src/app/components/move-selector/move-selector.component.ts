@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Player } from '../../models/player';
 import { GameService } from '../../services/game.service';
@@ -18,6 +18,8 @@ export type IconMapping = {
 })
 export class MoveSelectorComponent {
   @Input() playerSelected: Player | null = null;
+  @Output() selectedPlayerMoveEvent = new EventEmitter<Player>()
+
   iconMapping: IconMapping = { 
     Rock: 'bi bi-circle', 
     Paper: 'bi bi-book',
@@ -27,20 +29,26 @@ export class MoveSelectorComponent {
   items: string[] = getEnumValues(Move)
   selection: string = '';
 
+  
+
   constructor(private gameService: GameService){ 
 
   }
 
+  emitSelectedMove(){ 
+    if(this.playerSelected){ 
+      this.selectedPlayerMoveEvent.emit(this.playerSelected);
+    }
+  }
+
   handleSelection(selection: string){ 
-    // go to last item in the rounds.players array
+    // emit a move selected
     this.selection = selection;
     console.log(`players: ${this.playerSelected}`)
     if(this.playerSelected){ 
       const select = selection.toUpperCase() as keyof typeof Move; // ok this isnt great, lets chat about this. 
-      // EVERY TIME YOU CALL YOU UPDATE THE CURRENT PLAYER MOVE WITH THIS
-      //const roundNumber = this.gameService.getLastRound()?.roundNumber; // lets clean this up after
-      //this.gameService.updatePlayerMove(this.playerSelected,this.playerSelected.id, select);
-      //this.gameService.updateSinglePlayerMove(select, this.playerSelected.id);
+      this.playerSelected.move = Move[select];
+        this.emitSelectedMove();
     }
   }
 

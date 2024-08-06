@@ -4,5 +4,5 @@ export interface Player {
     name: string, 
     id: number, 
     move?: Move,
-    winner?:boolean,
+    score: number,
 }

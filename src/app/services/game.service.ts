@@ -17,7 +17,7 @@ export class GameService {
   errorMessage$ = this.errorMessageSubject.asObservable();
   players$: Observable<Player[]> = this.playersSubject.asObservable();
 
-  private readonly MAX_PLAYERS = 2;
+  readonly MAX_PLAYERS = 2;
   private nextPlayerId = 0;
 
   constructor() {}
@@ -40,7 +40,7 @@ export class GameService {
       console.warn(`Cannot add more than ${this.MAX_PLAYERS}`);
       return;
     }
-    const newPlayer: Player = { name: playerName, id: this.nextPlayerId++}; // will end up skipping the 0th id I think
+    const newPlayer: Player = { name: playerName, id: this.nextPlayerId++, score: 0}; // will end up skipping the 0th id I think
     const updatedPlayers = [...this.playersSubject.getValue(), newPlayer];
     this.playersSubject.next(updatedPlayers);
   }
