@@ -4,6 +4,7 @@ import { Player } from '../../models/player';
 import { GameService } from '../../services/game.service';
 import { Move } from '../../models/move.enum';
 import { getEnumValues } from '../../shared/utils';
+import { CommonModule } from '@angular/common';
 
 
 export type IconMapping = { 
@@ -12,13 +13,13 @@ export type IconMapping = {
 @Component({
   selector: 'move-selector',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './move-selector.component.html',
   styleUrl: './move-selector.component.scss'
 })
 export class MoveSelectorComponent {
   @Input() playerSelected: Player | null = null;
-  @Output() selectedPlayerMoveEvent = new EventEmitter<Player>()
+  @Output() selectedPlayerMoveEvent = new EventEmitter<Player>();
 
   private resetSubscription: Subscription | undefined;
 
@@ -30,8 +31,6 @@ export class MoveSelectorComponent {
 
   items: string[] = getEnumValues(Move)
   selection: string = '';
-
-  
 
   constructor(private gameService: GameService){ 
 

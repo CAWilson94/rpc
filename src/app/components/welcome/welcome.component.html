@@ -11,10 +11,10 @@
         "
       ></player-input-form>
       <button
-        class="btn btn-secondary h-50"
+        class="btn btn-outline-success h-50"
         (click)="onPlayerInput(gameState.players)"
       >
-        Play Computer
+        <i class="bi bi-pc-display-horizontal"> Battle Computer </i>
       </button>
     </ng-container>
   </div>
@@ -30,7 +30,7 @@
     @if (players$ | async; as players){ @if(players.length > 0){ @for(player of
     players$ | async; track player){
     <h2>Player {{ (player.id || 0) + 1 }} : {{ player.name }}</h2>
-    } @if(players.length > 1){ All players added, beginning game! }
+    } @if(players.length > 1){ All players added, beginning game ... }
     @if(players.length < 2){ please add a player two or click to play against
     computer. } } }
   </div>
