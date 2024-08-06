@@ -39,7 +39,7 @@ export class MoveSelectorComponent {
 
   ngOnInit() {
     this.resetSubscription = this.gameService.gameReset$.subscribe(() => {
-      //this.clearSelection();
+      this.clearSelection();
     });
   }
 
@@ -61,7 +61,6 @@ export class MoveSelectorComponent {
   }
 
   handleSelection(selection: string){ 
-    // emit a move selected
     this.selection = selection;
     if(this.playerSelected){ 
       const select = selection.toUpperCase() as keyof typeof Move; // ok this isnt great, lets chat about this. 

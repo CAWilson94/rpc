@@ -52,15 +52,14 @@ export class GameService {
     this.playersSubject.next(updatedPlayers);
   }
 
-  resetRound(){
+  resetRound(resetTemplating: boolean){
     this.players$ = this.players$.pipe(
       map(players => players.map(({ move, ...rest }) => rest))
     );
-    //this.gameResetSubject.next(); 
+    this.gameResetSubject.next(); 
   }
 
   finishGames(){ 
-    console.log('game should be finished')
     this.gameFinishSubject.next(true); 
   }
 

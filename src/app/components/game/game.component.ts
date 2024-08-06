@@ -42,14 +42,12 @@ export class GameComponent {
   }
 
   /**
-   * nothing calls this yet. we need to know when two moves have been made. 
    * @param player1 
    * @param player2 
    */
   winner(player1: Player, player2: Player) {
     const winner: Player | undefined = this.rockPaperScissors(player1, player2);
     if(winner){ 
-      // check which player was winner and replace them with winner 
       if(player1.score >=this.WINNING_SCORE || player2.score >=this.WINNING_SCORE){ 
         this.gameService.finishGames();
       }
@@ -58,7 +56,7 @@ export class GameComponent {
       console.log( `DRAW ${player1.name} : ${this.currentRoundPlayers[player1.id].score} / ${player2.name} ${this.currentRoundPlayers[player2.id].score} `);
     }
 
-    this.resetRound();    
+    this.resetRound(false);    
   }
 
   rockPaperScissors(player1: Player, player2: Player): Player | undefined {
@@ -84,14 +82,8 @@ export class GameComponent {
     return moveMapper[move];
   }
 
-  resetRound() {
-    /**
-     * clear round items
-     * means we need to again add players. 
-     */
-    //const updatedRoundPlayers: Omit<Player, 'move'>[] = this.currentRoundPlayers.map(({ move, ...rest }) => rest);
+  resetRound(resetTemplating: boolean) {
     this.currentRoundPlayers = [];
-    console.log('Resetting round');
-    this.gameService.resetRound();
+    this.gameService.resetRound(resetTemplating);
   }
 }
