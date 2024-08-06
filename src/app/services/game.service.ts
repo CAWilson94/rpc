@@ -97,7 +97,6 @@ export class GameService {
         gameFinished: true,
         gameWinner: this.getGameWinner(),
       });
-      console.log(this.gameLogSubject.value);
     }, 0);
   }
 
