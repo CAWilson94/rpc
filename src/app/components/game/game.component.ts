@@ -15,8 +15,11 @@ import { Move } from '../../models/move.enum';
 })
 export class GameComponent {
   players$: Observable<Player[]>;
+  gameFinish$: Observable<boolean>;
 
   currentRoundPlayers: Player[] = [];
+
+  WINNING_SCORE:number = 2;
 
   getPlayerScoreforCurrentRound(playerId: number): number {
     return this.currentRoundPlayers[playerId].score;
@@ -28,11 +31,12 @@ export class GameComponent {
 
   constructor(public gameService: GameService) {
     this.players$ = gameService.players$;
+    this.gameFinish$ = gameService.gameFinish$;
   }
 
   updateSelectedMove(playerSelectedMove: Player) {
     this.currentRoundPlayers?.push(playerSelectedMove);
-    if(this.currentRoundPlayers?.length==2){ 
+    if(this.currentRoundPlayers?.length==2){
       this.winner(this.currentRoundPlayers[0], this.currentRoundPlayers[1]);
     }
   }
@@ -46,6 +50,9 @@ export class GameComponent {
     const winner: Player | undefined = this.rockPaperScissors(player1, player2);
     if(winner){ 
       // check which player was winner and replace them with winner 
+      if(player1.score >=this.WINNING_SCORE || player2.score >=this.WINNING_SCORE){ 
+        this.gameService.finishGames();
+      }
       console.log( `Score is ${player1.name} : ${this.currentRoundPlayers[player1.id].score} /  ${player2.name} ${this.currentRoundPlayers[player2.id].score} `);
     }else { 
       console.log( `DRAW ${player1.name} : ${this.currentRoundPlayers[player1.id].score} / ${player2.name} ${this.currentRoundPlayers[player2.id].score} `);

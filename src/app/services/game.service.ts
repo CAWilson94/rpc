@@ -24,6 +24,9 @@ export class GameService {
   private gameResetSubject = new BehaviorSubject<void>(undefined);
   gameReset$ = this.gameResetSubject.asObservable();
 
+  private gameFinishSubject = new BehaviorSubject<boolean>(false);
+  gameFinish$ = this.gameFinishSubject.asObservable();
+
   constructor() {}
 
   notifyPlayerInput(input: string) {
@@ -54,6 +57,11 @@ export class GameService {
       map(players => players.map(({ move, ...rest }) => rest))
     );
     //this.gameResetSubject.next(); 
+  }
+
+  finishGames(){ 
+    console.log('game should be finished')
+    this.gameFinishSubject.next(true); 
   }
 
 }

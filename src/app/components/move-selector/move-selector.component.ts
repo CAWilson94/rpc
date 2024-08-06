@@ -63,7 +63,6 @@ export class MoveSelectorComponent {
   handleSelection(selection: string){ 
     // emit a move selected
     this.selection = selection;
-    this.selectedPlayerMoveEvent.forEach(player => console.log(player))
     if(this.playerSelected){ 
       const select = selection.toUpperCase() as keyof typeof Move; // ok this isnt great, lets chat about this. 
       this.playerSelected.move = Move[select];

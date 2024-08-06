@@ -1,14 +1,44 @@
 <div class="d-flex flex-column h-100">
-  @if(players$ | async; as players){
-    <h3 class="d-flex justify-content-start">Score: <br> {{players[0].name}} {{players[0].score}} / {{players[1].name}} {{players[1].score}} </h3>
-    <div class="d-flex flex-row pb-3 mt-5">
-        <move-selector [playerSelected]="players[0]" (selectedPlayerMoveEvent)="updateSelectedMove($event)"></move-selector>
-        <move-selector [playerSelected]="players[1]" (selectedPlayerMoveEvent)="updateSelectedMove($event)"></move-selector>
+  <ng-container *ngIf="players$ | async as players">
+    <ng-container *ngIf="(gameFinish$ | async) === false; else gameFinished">
+      <h3 class="d-flex justify-content-start">
+        Score: <br />
+        {{ players[0].name }} {{ players[0].score }} / {{ players[1].name }}
+        {{ players[1].score }}
+      </h3>
+      <div class="d-flex flex-row pb-3 mt-5">
+        <move-selector
+          [playerSelected]="players[0]"
+          (selectedPlayerMoveEvent)="updateSelectedMove($event)"
+        ></move-selector>
+        <move-selector
+          [playerSelected]="players[1]"
+          (selectedPlayerMoveEvent)="updateSelectedMove($event)"
+        ></move-selector>
       </div>
-    }
-</div>
+      <button type="button" (click)="resetRound()" class="btn btn-primary">
+        <i class="bi bi-arrow-right-circle"></i>
+        Next Round
+      </button>
+    </ng-container>
 
-<button type="button" (click)=resetRound() class="btn btn-primary">
-  <i class="bi bi-arrow-right-circle"></i>
-  Next Round
-</button>
+    <ng-template #gameFinished>
+      <h3 class="d-flex justify-content-start">
+        Final Score:
+        {{ players[0].name }} {{ players[0].score }} / {{ players[1].name }}
+        {{ players[1].score }}
+      </h3>
+      <div class="d-flex flex-row flex-grow-1">
+        <button class="btn btn-primary me-2">
+          <i class="bi bi-floppy2">Save</i>
+        </button>
+        <button class="btn btn-secondary me-2">
+          <i class="bi bi-arrow-repeat">Rematch!</i>
+        </button>
+        <button class="btn btn-success me-2">
+          <i class="bi bi-plus-square">New Game</i>
+        </button>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>
