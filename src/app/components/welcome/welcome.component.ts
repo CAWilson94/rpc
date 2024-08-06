@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { PlayerInputFormComponent } from '../player-input-form/player-input-form.component';
 import { combineLatest, map, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Player } from '../../models/player';
+import { Player, PlayerType } from '../../models/player';
 import { GameService } from '../../services/game.service';
 
 @Component({
@@ -31,7 +31,10 @@ export class WelcomeComponent {
   }
 
    // could use this for both types of player selection
-   onPlayerInput(players: Player[]){ 
+   onPlayerInput(players: Player[], isComputer?: true){ 
+    if(isComputer){ 
+      this.gameService.addPlayer("COMPUTER");
+    }
     if(players.length < 1){ 
       this.gameService.notifyErrorMessage('You must select at least one player');
     }else{ 

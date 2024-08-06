@@ -78,11 +78,11 @@ The project is organised into several key components, services and models
      For all of above, there is an observable - using a behavior subject means any subscriber will get the last event emitted value.
 * Key Methods:
 
-    * player Management via addPlayer() method
-    * resetRound used to reset the state of the game
-    * finishGames allows for the end of the game, updates the log
-    * updateGameLog and getGameLog to manage the game log
-    * saveGame updates the localStorage with the latest game
+  * player Management via addPlayer() method
+  * resetRound used to reset the state of the game
+  * finishGames allows for the end of the game, updates the log
+  * updateGameLog and getGameLog to manage the game log
+  * saveGame updates the localStorage with the latest game
 
     There are several utility methods also.
 
