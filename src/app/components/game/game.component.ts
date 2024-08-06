@@ -5,6 +5,7 @@ import { Player } from '../../models/player';
 import { Observable } from 'rxjs';
 import { GameService } from '../../services/game.service';
 import { Move } from '../../models/move.enum';
+import { GameLog } from '../../models/game';
 
 @Component({
   selector: 'game',
@@ -15,7 +16,7 @@ import { Move } from '../../models/move.enum';
 })
 export class GameComponent {
   players$:  Observable<Player[]>;
-  gameFinish$: Observable<boolean>;
+  gameLog$: Observable<GameLog | undefined>;
   roundWinnerMessage$: Observable<string>;
   
   currentRoundPlayers: Player[] = [];
@@ -31,7 +32,7 @@ export class GameComponent {
 
   constructor(public gameService: GameService) {
     this.players$ = gameService.players$;
-    this.gameFinish$ = gameService.gameFinish$;
+    this.gameLog$ = gameService.gameLog$;
     this.roundWinnerMessage$ = gameService.roundWinnerMessage$;
   }
 
@@ -46,6 +47,7 @@ export class GameComponent {
     const winner: Player | undefined = this.rockPaperScissors(player1, player2);
     if(winner){ 
       this.updateRoundWinnerMessage(player1, player2, winner.id);
+      this.gameService.updateGameLog(player1, player2, winner);
       if(player1.score >=this.WINNING_SCORE || player2.score >=this.WINNING_SCORE){ 
         this.gameService.finishGames();
       }
@@ -54,10 +56,7 @@ export class GameComponent {
     }
     setTimeout(()=> { 
       this.resetRound(false);    
-    }, 2000); // want a chance to show winner for current round before resetting
-
-
-    
+    }, 2000); // want a chance to show winner for current round before resetting 
   }
 
   rockPaperScissors(player1: Player, player2: Player): Player | undefined {
@@ -80,12 +79,16 @@ export class GameComponent {
         const loser = winner === player1 ? player2 : player1;
         const message = `${winner?.move} beats ${loser.move}`;
         this.gameService.setRoundWinnerMessage(message);
+        if(winner){
+          this.gameService.updateGameLog(player1, player2, winner);  
+        }
+        
     }else { 
       // no winner so it is a draw 
       const message = `${player1?.move} draws with ${player2?.move}`
       this.gameService.setRoundWinnerMessage(message);
+      this.gameService.updateGameLog(player1, player2);
     }
-    
   }
 
   mapMoveToNumber(move: Move): number {

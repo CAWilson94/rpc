@@ -1,6 +1,6 @@
 <div class="d-flex flex-column h-100">
   <ng-container *ngIf="players$ | async as players">
-    <ng-container *ngIf="(gameFinish$ | async) === false; else gameFinished">
+    <ng-container *ngIf="(gameLog$ | async)?.gameFinished === false; else gameFinished">
       <div class="d-flex flex-row">
       <h3 class="d-flex justify-content-end me-lg-5">
         Score: 
@@ -19,8 +19,8 @@
           (selectedPlayerMoveEvent)="updateSelectedMove($event)"
         ></move-selector>
         <move-selector
-          [playerSelected]="players[1]"
-          (selectedPlayerMoveEvent)="updateSelectedMove($event)"
+            [playerSelected]="players[1]"
+            (selectedPlayerMoveEvent)="updateSelectedMove($event)"
         ></move-selector>
       </div>
 
@@ -35,6 +35,7 @@
   
 
     <ng-template #gameFinished>
+      <h1>WINNER!!! <br> </h1>
       <h3 class="d-flex justify-content-start">
         Final Score:
         {{ players[0].name }} {{ players[0].score }} / {{ players[1].name }}

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, timeInterval } from 'rxjs';
+import { BehaviorSubject, map, max, Observable, timeInterval } from 'rxjs';
 import { Player } from '../models/player';
-import { ResetState } from '../models/game';
+import { GameLog, ResetState } from '../models/game';
+import { Round } from '../models/round';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GameService {
-  
   private playerInputSubject = new BehaviorSubject<string>('');
   private errorMessageSubject = new BehaviorSubject<string>('');
 
@@ -25,11 +25,14 @@ export class GameService {
   private gameResetSubject = new BehaviorSubject<ResetState>(undefined);
   gameReset$ = this.gameResetSubject.asObservable();
 
-  private roundWinnerMessageSubject = new BehaviorSubject<string>("");
+  private roundWinnerMessageSubject = new BehaviorSubject<string>('');
   roundWinnerMessage$ = this.roundWinnerMessageSubject.asObservable();
 
-  private gameFinishSubject = new BehaviorSubject<boolean>(false);
-  gameFinish$ = this.gameFinishSubject.asObservable();
+  private gameLogSubject = new BehaviorSubject<GameLog | undefined>({
+    gameFinished: false,
+    gameRounds: [],
+  });
+  gameLog$ = this.gameLogSubject.asObservable();
 
   constructor() {}
 
@@ -45,7 +48,7 @@ export class GameService {
     this.errorMessageSubject.next('');
   }
 
-  setRoundWinnerMessage(message: string){ 
+  setRoundWinnerMessage(message: string) {
     this.roundWinnerMessageSubject.next(message);
   }
 
@@ -75,9 +78,47 @@ export class GameService {
     this.gameResetSubject.next(resetTemplating ? 'TEMPLATE_AND_DATA' : 'DATA');
   }
 
-  finishGames() {
-    setTimeout(() => {
-      this.gameFinishSubject.next(true);
-    }, 2000);
+  async finishGames() {
+    setTimeout(async () => {
+      const winningPlayer = await this.getGameWinner();
+      this.gameLogSubject.next({
+        gameFinished: true,
+        gameWinner: this.getGameWinner(),
+      });
+      console.log(this.gameLogSubject.value);
+    }, 0);
+  }
+
+  getGameWinner() {
+    if (this.gameLogSubject.value && this.gameLogSubject.value.gameRounds) {
+      const rounds = this.gameLogSubject?.value?.gameRounds;
+      const latestRound = rounds[rounds.length - 1];
+      const winningPlayer = latestRound.players.reduce(
+        (maxPlayer, currentPlayer) => {
+          return currentPlayer.score > maxPlayer.score
+            ? currentPlayer
+            : maxPlayer;
+        }
+      );
+      return winningPlayer;
+    }
+    return undefined;
+  }
+
+  updateGameLog(player1: Player, player2: Player, winningPlayer?: Player) {
+    const currentLog = this.gameLogSubject.value;
+    const gameRounds: Round[] = this.gameLogSubject.value?.gameRounds || [];
+    const roundNumber: number = currentLog?.gameRounds?.length ?? 0;
+    const newRound: Round = {
+      roundNumber: roundNumber,
+      players: [player1, player2],
+      winner: winningPlayer,
+    };
+    if (currentLog) {
+      this.gameLogSubject.next({
+        ...currentLog,
+        gameRounds: [...gameRounds, newRound],
+      });
+    }
   }
 }
