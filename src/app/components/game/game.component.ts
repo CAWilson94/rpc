@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { GameService } from '../../services/game.service';
 import { Move } from '../../models/move.enum';
 import { GameLog } from '../../models/game';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 @Component({
   selector: 'game',
@@ -15,22 +16,25 @@ import { GameLog } from '../../models/game';
   styleUrl: './game.component.scss',
 })
 export class GameComponent {
-  players$:  Observable<Player[]>;
+  players$: Observable<Player[]>;
   gameLog$: Observable<GameLog | undefined>;
   roundWinnerMessage$: Observable<string>;
-  
+
   currentRoundPlayers: Player[] = [];
-  WINNING_SCORE:number = 2;
+  WINNING_SCORE: number = 2;
 
   getPlayerScoreforCurrentRound(playerId: number): number {
     return this.currentRoundPlayers[playerId].score;
   }
 
   increasePlayerScoreforCurrentRound(playerId: number) {
-      this.currentRoundPlayers[playerId].score +=1;
+    this.currentRoundPlayers[playerId].score += 1;
   }
 
-  constructor(public gameService: GameService) {
+  constructor(
+    public gameService: GameService,
+    private localStorage: LocalStorageService
+  ) {
     this.players$ = gameService.players$;
     this.gameLog$ = gameService.gameLog$;
     this.roundWinnerMessage$ = gameService.roundWinnerMessage$;
@@ -38,25 +42,28 @@ export class GameComponent {
 
   updateSelectedMove(playerSelectedMove: Player) {
     this.currentRoundPlayers?.push(playerSelectedMove);
-    if(this.currentRoundPlayers?.length==2){
+    if (this.currentRoundPlayers?.length == 2) {
       this.winner(this.currentRoundPlayers[0], this.currentRoundPlayers[1]);
     }
   }
 
   winner(player1: Player, player2: Player) {
     const winner: Player | undefined = this.rockPaperScissors(player1, player2);
-    if(winner){ 
+    if (winner) {
       this.updateRoundWinnerMessage(player1, player2, winner.id);
       this.gameService.updateGameLog(player1, player2, winner);
-      if(player1.score >=this.WINNING_SCORE || player2.score >=this.WINNING_SCORE){ 
+      if (
+        player1.score >= this.WINNING_SCORE ||
+        player2.score >= this.WINNING_SCORE
+      ) {
         this.gameService.finishGames();
       }
-    }else { 
+    } else {
       this.updateRoundWinnerMessage(player1, player2);
     }
-    setTimeout(()=> { 
-      this.resetRound(false);    
-    }, 2000); // want a chance to show winner for current round before resetting 
+    setTimeout(() => {
+      this.resetRound(false);
+    }, 2000); // want a chance to show winner for current round before resetting
   }
 
   rockPaperScissors(player1: Player, player2: Player): Player | undefined {
@@ -73,19 +80,27 @@ export class GameComponent {
     }
   }
 
-  updateRoundWinnerMessage(player1: Player, player2: Player, winningId?: number){ 
+  updateRoundWinnerMessage(
+    player1: Player,
+    player2: Player,
+    winningId?: number
+  ) {
     if (winningId && player1 && player2) {
-        const winner = player1.id === winningId ? player1 : (player2.id === winningId ? player2 : null);
-        const loser = winner === player1 ? player2 : player1;
-        const message = `${winner?.move} beats ${loser.move}`;
-        this.gameService.setRoundWinnerMessage(message);
-        if(winner){
-          this.gameService.updateGameLog(player1, player2, winner);  
-        }
-        
-    }else { 
-      // no winner so it is a draw 
-      const message = `${player1?.move} draws with ${player2?.move}`
+      const winner =
+        player1.id === winningId
+          ? player1
+          : player2.id === winningId
+          ? player2
+          : null;
+      const loser = winner === player1 ? player2 : player1;
+      const message = `${winner?.move} beats ${loser.move}`;
+      this.gameService.setRoundWinnerMessage(message);
+      if (winner) {
+        this.gameService.updateGameLog(player1, player2, winner);
+      }
+    } else {
+      // no winner so it is a draw
+      const message = `${player1?.move} draws with ${player2?.move}`;
       this.gameService.setRoundWinnerMessage(message);
       this.gameService.updateGameLog(player1, player2);
     }
@@ -103,5 +118,18 @@ export class GameComponent {
   resetRound(resetTemplating: boolean) {
     this.currentRoundPlayers = [];
     this.gameService.resetRound(resetTemplating);
+  }
+
+  /**
+   * future work to replace the local storage with some extended
+   * service which can take in generic types etc
+   */
+  saveGame() {
+    const gameLog = this.gameService?.getGameLog();
+    if (gameLog) {
+      this.localStorage.addOrUpdateLocalStorageItem('game-key-here', gameLog);
+    } else {
+      console.error('Game log is undefined, cannot save the game.');
+    }
   }
 }

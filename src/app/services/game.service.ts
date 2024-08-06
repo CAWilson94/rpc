@@ -48,12 +48,24 @@ export class GameService {
     this.errorMessageSubject.next('');
   }
 
+  getClearErrorMessage() {
+    return this.errorMessageSubject.value;
+  }
+
   setRoundWinnerMessage(message: string) {
     this.roundWinnerMessageSubject.next(message);
   }
 
+  getRoundWinnerMessage(){ 
+    return this.roundWinnerMessageSubject.value;
+  }
+
   clearRoundWinnerMesssage() {
     this.roundWinnerMessageSubject.next('');
+  }
+
+  getGameLog(){ 
+    return this.gameLogSubject.value;
   }
 
   addPlayer(playerName: string) {
@@ -121,4 +133,6 @@ export class GameService {
       });
     }
   }
+
+
 }
