@@ -1,11 +1,18 @@
 <div class="d-flex flex-column h-100">
   <ng-container *ngIf="players$ | async as players">
     <ng-container *ngIf="(gameFinish$ | async) === false; else gameFinished">
-      <h3 class="d-flex justify-content-start">
-        Score: <br />
+      <div class="d-flex flex-row">
+      <h3 class="d-flex justify-content-end me-lg-5">
+        Score: 
         {{ players[0].name }} {{ players[0].score }} / {{ players[1].name }}
         {{ players[1].score }}
       </h3>
+
+      <div *ngIf="roundWinnerMessage$ | async as winMessage" class="d-flex justify-content-start">
+        <h3>{{ winMessage}}</h3>
+      </div>
+    </div>
+
       <div class="d-flex flex-row pb-3 mt-5">
         <move-selector
           [playerSelected]="players[0]"

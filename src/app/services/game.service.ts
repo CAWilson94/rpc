@@ -7,6 +7,7 @@ import { ResetState } from '../models/game';
   providedIn: 'root',
 })
 export class GameService {
+  
   private playerInputSubject = new BehaviorSubject<string>('');
   private errorMessageSubject = new BehaviorSubject<string>('');
 
@@ -24,6 +25,9 @@ export class GameService {
   private gameResetSubject = new BehaviorSubject<ResetState>(undefined);
   gameReset$ = this.gameResetSubject.asObservable();
 
+  private roundWinnerMessageSubject = new BehaviorSubject<string>("");
+  roundWinnerMessage$ = this.roundWinnerMessageSubject.asObservable();
+
   private gameFinishSubject = new BehaviorSubject<boolean>(false);
   gameFinish$ = this.gameFinishSubject.asObservable();
 
@@ -39,6 +43,14 @@ export class GameService {
 
   clearErrorMessage() {
     this.errorMessageSubject.next('');
+  }
+
+  setRoundWinnerMessage(message: string){ 
+    this.roundWinnerMessageSubject.next(message);
+  }
+
+  clearRoundWinnerMesssage() {
+    this.roundWinnerMessageSubject.next('');
   }
 
   addPlayer(playerName: string) {

@@ -39,6 +39,7 @@ export class MoveSelectorComponent {
       (resetState: ResetState) => {
         if (resetState === 'TEMPLATE_AND_DATA') {
           this.clearSelection();
+          this.gameService.clearRoundWinnerMesssage();
         }
       }
     );
@@ -51,6 +52,7 @@ export class MoveSelectorComponent {
   private clearSelection() {
     this.selection = ' ';
     if (this.playerSelected) {
+      this.gameService.clearRoundWinnerMesssage();
       this.playerSelected.move = undefined;
     }
   }
