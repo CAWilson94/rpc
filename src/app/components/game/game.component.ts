@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MoveSelectorComponent } from '../move-selector/move-selector.component';
 import { CommonModule } from '@angular/common';
 import { Player } from '../../models/player';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { GameService } from '../../services/game.service';
 import { Move } from '../../models/move.enum';
 
@@ -18,9 +18,6 @@ export class GameComponent {
 
   currentRoundPlayers: Player[] = [];
 
-  currentSelectedMoves: { [key: number]: Move | null } = { 0: null, 1: null };
-  
-
   getPlayerScoreforCurrentRound(playerId: number): number {
     return this.currentRoundPlayers[playerId].score;
   }
@@ -29,7 +26,7 @@ export class GameComponent {
       this.currentRoundPlayers[playerId].score +=1;
   }
 
-  constructor(gameService: GameService) {
+  constructor(public gameService: GameService) {
     this.players$ = gameService.players$;
   }
 
@@ -49,11 +46,12 @@ export class GameComponent {
     const winner: Player | undefined = this.rockPaperScissors(player1, player2);
     if(winner){ 
       // check which player was winner and replace them with winner 
-      alert( `Score is ${player1.name} : ${this.currentRoundPlayers[player1.id].score} ${player2.name} ${this.currentRoundPlayers[player2.id].score} `);
+      console.log( `Score is ${player1.name} : ${this.currentRoundPlayers[player1.id].score} /  ${player2.name} ${this.currentRoundPlayers[player2.id].score} `);
     }else { 
-      alert( `DRAW ${player1.name} : ${this.currentRoundPlayers[player1.id].score} ${player2.name} ${this.currentRoundPlayers[player2.id].score} `);
+      console.log( `DRAW ${player1.name} : ${this.currentRoundPlayers[player1.id].score} / ${player2.name} ${this.currentRoundPlayers[player2.id].score} `);
     }
-    
+
+    this.resetRound();    
   }
 
   rockPaperScissors(player1: Player, player2: Player): Player | undefined {
@@ -77,5 +75,16 @@ export class GameComponent {
       [Move.SCISSORS]: 2,
     };
     return moveMapper[move];
+  }
+
+  resetRound() {
+    /**
+     * clear round items
+     * means we need to again add players. 
+     */
+    //const updatedRoundPlayers: Omit<Player, 'move'>[] = this.currentRoundPlayers.map(({ move, ...rest }) => rest);
+    this.currentRoundPlayers = [];
+    console.log('Resetting round');
+    this.gameService.resetRound();
   }
 }

@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, timeInterval } from 'rxjs';
 import { Player } from '../models/player';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GameService {
+  
   private playerInputSubject = new BehaviorSubject<string>('');
   private errorMessageSubject = new BehaviorSubject<string>('');
 
@@ -19,6 +20,9 @@ export class GameService {
 
   readonly MAX_PLAYERS = 2;
   private nextPlayerId = 0;
+
+  private gameResetSubject = new BehaviorSubject<void>(undefined);
+  gameReset$ = this.gameResetSubject.asObservable();
 
   constructor() {}
 
@@ -44,4 +48,12 @@ export class GameService {
     const updatedPlayers = [...this.playersSubject.getValue(), newPlayer];
     this.playersSubject.next(updatedPlayers);
   }
+
+  resetRound(){
+    this.players$ = this.players$.pipe(
+      map(players => players.map(({ move, ...rest }) => rest))
+    );
+    //this.gameResetSubject.next(); 
+  }
+
 }

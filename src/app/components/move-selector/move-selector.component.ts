@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Player } from '../../models/player';
 import { GameService } from '../../services/game.service';
 import { Move } from '../../models/move.enum';
@@ -20,6 +20,8 @@ export class MoveSelectorComponent {
   @Input() playerSelected: Player | null = null;
   @Output() selectedPlayerMoveEvent = new EventEmitter<Player>()
 
+  private resetSubscription: Subscription | undefined;
+
   iconMapping: IconMapping = { 
     Rock: 'bi bi-circle', 
     Paper: 'bi bi-book',
@@ -35,6 +37,23 @@ export class MoveSelectorComponent {
 
   }
 
+  ngOnInit() {
+    this.resetSubscription = this.gameService.gameReset$.subscribe(() => {
+      //this.clearSelection();
+    });
+  }
+
+  ngOnDestroy() {
+    this.resetSubscription?.unsubscribe();
+  }
+
+  private clearSelection() {
+    this.selection = " ";
+    if (this.playerSelected) {
+      this.playerSelected.move = undefined;
+    }
+  }
+
   emitSelectedMove(){ 
     if(this.playerSelected){ 
       this.selectedPlayerMoveEvent.emit(this.playerSelected);
@@ -44,7 +63,7 @@ export class MoveSelectorComponent {
   handleSelection(selection: string){ 
     // emit a move selected
     this.selection = selection;
-    console.log(`players: ${this.playerSelected}`)
+    this.selectedPlayerMoveEvent.forEach(player => console.log(player))
     if(this.playerSelected){ 
       const select = selection.toUpperCase() as keyof typeof Move; // ok this isnt great, lets chat about this. 
       this.playerSelected.move = Move[select];

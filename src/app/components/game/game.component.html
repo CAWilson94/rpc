@@ -1,9 +1,14 @@
 <div class="d-flex flex-column h-100">
   @if(players$ | async; as players){
+    <h3 class="d-flex justify-content-start">Score: <br> {{players[0].name}} {{players[0].score}} / {{players[1].name}} {{players[1].score}} </h3>
     <div class="d-flex flex-row pb-3 mt-5">
         <move-selector [playerSelected]="players[0]" (selectedPlayerMoveEvent)="updateSelectedMove($event)"></move-selector>
         <move-selector [playerSelected]="players[1]" (selectedPlayerMoveEvent)="updateSelectedMove($event)"></move-selector>
       </div>
-    Current Selected Moves : {{players[0].move}} {{players[1].move}}
     }
 </div>
+
+<button type="button" (click)=resetRound() class="btn btn-primary">
+  <i class="bi bi-arrow-right-circle"></i>
+  Next Round
+</button>
