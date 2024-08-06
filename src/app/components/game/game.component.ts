@@ -16,12 +16,6 @@ import { Move } from '../../models/move.enum';
 export class GameComponent {
   players$: Observable<Player[]>;
 
-  player1ScoreSubject = new BehaviorSubject<number>(0);
-  player2ScoreSubject = new BehaviorSubject<number>(0);
-
-  player1Score$ = this.player1ScoreSubject.asObservable();
-  player2Score$ = this.player2ScoreSubject.asObservable();
-
   currentRoundPlayers: Player[] = [];
 
   currentSelectedMoves: { [key: number]: Move | null } = { 0: null, 1: null };
@@ -36,8 +30,6 @@ export class GameComponent {
   }
 
   constructor(gameService: GameService) {
-    // do we actually want that or can we take from move selection thingy
-    // or update game service with current players from move selection -- should only do this once at the start of the game.
     this.players$ = gameService.players$;
   }
 
