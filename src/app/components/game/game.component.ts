@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MoveSelectorComponent } from '../move-selector/move-selector.component';
 import { CommonModule } from '@angular/common';
 import { Player } from '../../models/player';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { GameService } from '../../services/game.service';
 import { Move } from '../../models/move.enum';
 
@@ -14,7 +14,7 @@ import { Move } from '../../models/move.enum';
   styleUrl: './game.component.scss',
 })
 export class GameComponent {
-  players$: Observable<Player[]>;
+  players$:  Observable<Player[]>;
   gameFinish$: Observable<boolean>;
 
   currentRoundPlayers: Player[] = [];
@@ -41,10 +41,6 @@ export class GameComponent {
     }
   }
 
-  /**
-   * @param player1 
-   * @param player2 
-   */
   winner(player1: Player, player2: Player) {
     const winner: Player | undefined = this.rockPaperScissors(player1, player2);
     if(winner){ 

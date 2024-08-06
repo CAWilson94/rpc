@@ -7,6 +7,8 @@ export interface Game {
     overallWinner?: Player;
 }
 
+export type ResetState = 'DATA' |  'TEMPLATE_AND_DATA' | undefined; 
+
 /**
  * Probably the winners and scores should be part of the game so we can 
  * have a thing like a score board etc. Lets see how this pans out. 

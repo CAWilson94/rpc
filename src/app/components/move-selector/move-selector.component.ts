@@ -5,17 +5,17 @@ import { GameService } from '../../services/game.service';
 import { Move } from '../../models/move.enum';
 import { getEnumValues } from '../../shared/utils';
 import { CommonModule } from '@angular/common';
+import { ResetState } from '../../models/game';
 
-
-export type IconMapping = { 
+export type IconMapping = {
   [key: string]: string;
-}
+};
 @Component({
   selector: 'move-selector',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './move-selector.component.html',
-  styleUrl: './move-selector.component.scss'
+  styleUrl: './move-selector.component.scss',
 })
 export class MoveSelectorComponent {
   @Input() playerSelected: Player | null = null;
@@ -23,23 +23,25 @@ export class MoveSelectorComponent {
 
   private resetSubscription: Subscription | undefined;
 
-  iconMapping: IconMapping = { 
-    Rock: 'bi bi-circle', 
+  iconMapping: IconMapping = {
+    Rock: 'bi bi-circle',
     Paper: 'bi bi-book',
     Scissors: 'bi bi-scissors',
-  }
+  };
 
-  items: string[] = getEnumValues(Move)
+  items: string[] = getEnumValues(Move);
   selection: string = '';
 
-  constructor(private gameService: GameService){ 
-
-  }
+  constructor(private gameService: GameService) {}
 
   ngOnInit() {
-    this.resetSubscription = this.gameService.gameReset$.subscribe(() => {
-      this.clearSelection();
-    });
+    this.resetSubscription = this.gameService.gameReset$.subscribe(
+      (resetState: ResetState) => {
+        if (resetState === 'TEMPLATE_AND_DATA') {
+          this.clearSelection();
+        }
+      }
+    );
   }
 
   ngOnDestroy() {
@@ -47,26 +49,24 @@ export class MoveSelectorComponent {
   }
 
   private clearSelection() {
-    this.selection = " ";
+    this.selection = ' ';
     if (this.playerSelected) {
       this.playerSelected.move = undefined;
     }
   }
 
-  emitSelectedMove(){ 
-    if(this.playerSelected){ 
+  emitSelectedMove() {
+    if (this.playerSelected) {
       this.selectedPlayerMoveEvent.emit(this.playerSelected);
     }
   }
 
-  handleSelection(selection: string){ 
+  handleSelection(selection: string) {
     this.selection = selection;
-    if(this.playerSelected){ 
-      const select = selection.toUpperCase() as keyof typeof Move; // ok this isnt great, lets chat about this. 
+    if (this.playerSelected) {
+      const select = selection.toUpperCase() as keyof typeof Move; // ok this isnt great, lets chat about this.
       this.playerSelected.move = Move[select];
-        this.emitSelectedMove();
+      this.emitSelectedMove();
     }
   }
-
 }
-
