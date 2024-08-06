@@ -64,30 +64,30 @@ The project is organised into several key components, services and models
 
 * Key Properties
 
-* Subjects and Observables:
+  * Subjects and Observables:
 
-1. playerInputSubject: tracks input from player for name update (post thinking about this, the name could be better).
-2. errorMessageSubject: manages error messages.
-3. playersSubject: holds current list of players for a round.
-4. gameResetSubject: handles game reset
-5. rondWinnerMessageSubject: manages message for round winner.
-6. gameLogSubject: keeps track of the games log including rounds and final game state.
+    * playerInputSubject: tracks input from player for name update (post thinking about this, the name could be better).
+    * errorMessageSubject: manages error messages.
+    * playersSubject: holds current list of players for a round.
+    * gameResetSubject: handles game reset
+    * rondWinnerMessageSubject: manages message for round winner.
+    * gameLogSubject: keeps track of the games log including rounds and final game state.
 
-* Observable Streams:
+  * Observable Streams:
 
      For all of above, there is an observable - using a behavior subject means any subscriber will get the last event emitted value.
 * Key Methods:
 
- 1. player Management via addPlayer() method
- 2. resetRound used to reset the state of the game
- 3. finishGames allows for the end of the game, updates the log
- 4. updateGameLog and getGameLog to manage the game log
- 5. saveGame updates the localStorage with the latest game
+    * player Management via addPlayer() method
+    * resetRound used to reset the state of the game
+    * finishGames allows for the end of the game, updates the log
+    * updateGameLog and getGameLog to manage the game log
+    * saveGame updates the localStorage with the latest game
 
- There are several utility methods also.
+    There are several utility methods also.
 
-##### MoveSelectorComponent and PlayerInputComponent
+#### MoveSelectorComponent and PlayerInputComponent
 
-The MoveSelectorComponent is used to  allow for one set of moves per player and the controls for this. The idea being that, we can have a list of moves and pass these to MoveSelectorComponent, iterate through them and display them all. As well as keeping this a contained component which controls moves for a single player.
+  The MoveSelectorComponent is used to  allow for one set of moves per player and the controls for this. The idea being that, we can have a list of moves and pass these to MoveSelectorComponent, iterate through them and display them all. As well as keeping this a contained component which controls moves for a single player.
 
-The PlayerInputComponent and the Welcome component are both there for the player selection screen. These are responsible for creating the initial players.
+  The PlayerInputComponent and the Welcome component are both there for the player selection screen. These are responsible for creating the initial players.
