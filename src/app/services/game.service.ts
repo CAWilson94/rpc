@@ -68,7 +68,7 @@ export class GameService {
     return this.gameLogSubject.value;
   }
 
-  addPlayer(playerName: string) {
+  addPlayer(playerName: string, isPlayerComputer: boolean) {
     const currentPlayers: Player[] = this.playersSubject.getValue();
     if (currentPlayers.length >= this.MAX_PLAYERS) {
       console.warn(`Cannot add more than ${this.MAX_PLAYERS}`);
@@ -78,6 +78,7 @@ export class GameService {
       name: playerName,
       id: this.nextPlayerId++,
       score: 0,
+      isComputer: isPlayerComputer,
     }; // will end up skipping the 0th id I think
     const updatedPlayers = [...this.playersSubject.getValue(), newPlayer];
     this.playersSubject.next(updatedPlayers);

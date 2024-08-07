@@ -1,11 +1,15 @@
 <div class="d-flex flex-column w-100 me-lg-5">
   <p class="m-1"><strong>Player {{(playerSelected?.id || 0) + 1}}:</strong> {{ playerSelected?.name }}</p>
-  <div class="d-flex flex-row align-items-start">
+  <div *ngIf="!playerSelected?.isComputer else computerBlock"  class="d-flex flex-row align-items-start">
+    
     @for(item of items; track item){
     <button class="btn btn-primary m-1" (click)="handleSelection(item)">
       <i [class]="iconMapping[item]"></i> {{ item }}
     </button>
     }
   </div>
+  <ng-template #computerBlock>
+    Computer Player
+  </ng-template>
   Selected Move: {{playerSelected?.move}}
 </div>

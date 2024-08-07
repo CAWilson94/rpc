@@ -33,7 +33,7 @@ export class WelcomeComponent {
    // could use this for both types of player selection
    onPlayerInput(players: Player[], isComputer?: true){ 
     if(isComputer){ 
-      this.gameService.addPlayer("COMPUTER");
+      this.gameService.addPlayer("COMPUTER", isComputer);
     }
     if(players.length < 1){ 
       this.gameService.notifyErrorMessage('You must select at least one player');

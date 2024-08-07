@@ -5,7 +5,7 @@
     <div *ngIf="players$ | async as players; else gameTemplate">
       <div class="content-welcome"
         *ngIf="
-          (players.length < 2 && gameState !== 'PLAY_COMPUTER') ||
+          (players.length < 2) ||
             players.length < 1;
           else gameTemplate
         "

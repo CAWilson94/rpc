@@ -7,4 +7,5 @@ export interface Player {
     id: number, 
     move?: Move,
     score: number,
+    isComputer: boolean,
 }
